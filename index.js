@@ -1,6 +1,7 @@
 const express = require("express");
 const banco = require("./banco");
 const atleta = require("./atleta");
+const meta = require("./meta");
 
 const app = express();
 app.use(express.json());
@@ -18,3 +19,6 @@ app.get("/atletas/", async function (req, res) {
   res.send(resultado);
 });
 
+banco.conexao.sync(function () {
+  console.log("Banco de dados conectado.");
+});
