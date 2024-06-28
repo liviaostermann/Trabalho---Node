@@ -15,9 +15,16 @@ app.listen(PORTA, function () {
   console.log("servidor inicada na porta" + PORTA);
 });
 
-//pegar todos os atletas
+//1. Ler todos os registros da entidade A e B (1 ponto).
+//ATLETAS
 app.get("/atletas/", async function (req, res) {
   const resultado = await atleta.atleta.findAll();
+  res.send(resultado);
+});
+
+//METAS
+app.get("/metas/", async function (req, res) {
+  const resultado = await meta.meta.findAll();
   res.send(resultado);
 });
 
@@ -25,7 +32,8 @@ banco.conexao.sync(function () {
   console.log("Banco de dados conectado.");
 });
 
-//pegar atleta pelo id
+//2. Ler apenas um registo pelo id da entidade A e B (1 ponto).
+//ATLETAS
 app.get("/atletas/:id", async function (req, res) {
   const resultado = await atleta.atleta.findByPk(req.params.id);
   if (resultado == null) {
@@ -35,7 +43,42 @@ app.get("/atletas/:id", async function (req, res) {
   }
 });
 
-//criar atleta
+//METAS
+app.get("/metas/:id", async function (req, res) {
+  const resultado = await meta.meta.findByPk(req.params.id);
+  if (resultado == null) {
+    res.status(404).send({});
+  } else {
+    res.send(resultado);
+  }
+});
+
+//3. Ler subconjunto de registros, buscando por um atributo da entidade A e B (3 pontos).
+//ATLETAS
+app.get("/atletas/nome/:nome", async function (req, res) {
+  const resultado = await atleta.atleta.findAll({
+    where: { nome: req.params.nome },
+  });
+  if (resultado == null) {
+    res.status(404).send({});
+  } else {
+    res.send(resultado);
+  }
+});
+//METAS
+app.get("/metas/titulo/:titulo", async function (req, res) {
+  const resultado = await meta.meta.findAll({
+    where: { titulo: req.params.titulo },
+  });
+  if (resultado == null) {
+    res.status(404).send({});
+  } else {
+    res.send(resultado);
+  }
+});
+
+//4. Criar um registro da entidade A e B (2 pontos).
+//ATLETAS
 app.post("/atletas/", async function (req, res) {
   const resultado = await atleta.atleta.create({
     nome: req.body.nome,
@@ -43,7 +86,18 @@ app.post("/atletas/", async function (req, res) {
   });
   res.send(resultado);
 });
+//METAS
+app.post("/metas/", async function (req, res) {
+  const resultado = await meta.meta.create({
+    titulo: req.body.titulo,
+    descricao: req.body.descricao,
+    atletumId: req.body.atletumId,
+  });
+  res.send(resultado);
+});
 
+//5. Atualizar um registro da entidade A e B (2 pontos).
+//ATLETAS
 app.put("/atletas/:id", async function (req, res) {
   const resultado = await atleta.atleta.update(
     {
@@ -65,44 +119,7 @@ app.put("/atletas/:id", async function (req, res) {
   }
 });
 
-app.delete("/atletas/:id", async function (req, res) {
-  const resultado = await atleta.atleta.destroy({
-    where: { id: req.params.id },
-  });
-  if (resultado == null) {
-    res.status(404).send({});
-  } else {
-    res.status(204).send({});
-  }
-});
-
-//REQ METAS
-app.get("/metas/", async function (req, res) {
-  const resultado = await meta.meta.findAll();
-  res.send(resultado);
-});
-
-banco.conexao.sync(function () {
-  console.log("Banco de dados conectado.");
-});
-
-app.get("/metas/:id", async function (req, res) {
-  const resultado = await meta.meta.findByPk(req.params.id);
-  if (resultado == null) {
-    res.status(404).send({});
-  } else {
-    res.send(resultado);
-  }
-});
-
-app.post("/metas/", async function (req, res) {
-  const resultado = await meta.meta.create({
-    titulo: req.body.titulo,
-    descricao: req.body.descricao,
-  });
-  res.send(resultado);
-});
-
+//METAS
 app.put("/metas/:id", async function (req, res) {
   const resultado = await meta.meta.update(
     {
@@ -123,6 +140,20 @@ app.put("/metas/:id", async function (req, res) {
   }
 });
 
+//6. Excluir um registro da entidade A e B (1 ponto).
+//ATLETAS
+app.delete("/atletas/:id", async function (req, res) {
+  const resultado = await atleta.atleta.destroy({
+    where: { id: req.params.id },
+  });
+  if (resultado == null) {
+    res.status(404).send({});
+  } else {
+    res.status(204).send({});
+  }
+});
+
+//METAS
 app.delete("/metas/:id", async function (req, res) {
   const resultado = await meta.meta.destroy({
     where: { id: req.params.id },
