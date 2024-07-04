@@ -15,6 +15,10 @@ app.listen(PORTA, function () {
   console.log("servidor inicada na porta" + PORTA);
 });
 
+banco.conexao.sync(function () {
+  console.log("Banco de dados conectado.");
+});
+
 //1. Ler todos os registros da entidade A e B (1 ponto).
 //ATLETAS
 app.get("/atletas/", async function (req, res) {
@@ -28,14 +32,12 @@ app.get("/metas/", async function (req, res) {
   res.send(resultado);
 });
 
-banco.conexao.sync(function () {
-  console.log("Banco de dados conectado.");
-});
-
 //2. Ler apenas um registo pelo id da entidade A e B (1 ponto).
 //ATLETAS
 app.get("/atletas/:id", async function (req, res) {
-  const resultado = await atleta.atleta.findByPk(req.params.id);
+  const resultado = await atleta.atleta.findByPk(req.params.id, {
+    include: { model: meta.meta },
+  });
   if (resultado == null) {
     res.status(404).send({});
   } else {
@@ -45,7 +47,9 @@ app.get("/atletas/:id", async function (req, res) {
 
 //METAS
 app.get("/metas/:id", async function (req, res) {
-  const resultado = await meta.meta.findByPk(req.params.id);
+  const resultado = await meta.meta.findByPk(req.params.id, {
+    include: { model: atleta.atleta },
+  });
   if (resultado == null) {
     res.status(404).send({});
   } else {
@@ -58,6 +62,7 @@ app.get("/metas/:id", async function (req, res) {
 app.get("/atletas/nome/:nome", async function (req, res) {
   const resultado = await atleta.atleta.findAll({
     where: { nome: req.params.nome },
+    include: { model: meta.meta },
   });
   if (resultado == null) {
     res.status(404).send({});
@@ -69,6 +74,7 @@ app.get("/atletas/nome/:nome", async function (req, res) {
 app.get("/metas/titulo/:titulo", async function (req, res) {
   const resultado = await meta.meta.findAll({
     where: { titulo: req.params.titulo },
+    include: { model: atleta.atleta },
   });
   if (resultado == null) {
     res.status(404).send({});
