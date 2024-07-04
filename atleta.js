@@ -1,5 +1,6 @@
 const sequelize = require("sequelize");
 const banco = require("./banco");
+const meta = require("./meta");
 
 var atleta = banco.conexao.define(
   "atleta",
@@ -20,5 +21,9 @@ var atleta = banco.conexao.define(
   },
   { timestamps: false }
 );
+
+//FK
+atleta.hasMany(meta.meta);
+meta.meta.belongsTo(atleta);
 
 module.exports = { atleta };

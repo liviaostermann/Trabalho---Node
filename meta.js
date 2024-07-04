@@ -21,4 +21,6 @@ var meta = banco.conexao.define(
   { timestamps: false }
 );
 
+
+
 module.exports = { meta };
