@@ -1,6 +1,9 @@
+//Esta linha imprime a mensagem "Node está funcionando" no console, indicando que o script foi iniciado corretamente.
 console.log("Node está funcionando");
-
+//Importa o módulo express, que é um framework para Node.js usado para criar servidores web
 const express = require("express");
+
+//importação de módulos personalizados
 const banco = require("./banco");
 const atleta = require("./atleta");
 const meta = require("./meta");
@@ -15,6 +18,8 @@ app.listen(PORTA, function () {
   console.log("servidor inicada na porta" + PORTA);
 });
 
+//Chama o método sync no objeto conexao do módulo banco. 
+//Esse método sincroniza o estado do banco de dados com os modelos definidos no código. 
 banco.conexao.sync(function () {
   console.log("Banco de dados conectado.");
 });
