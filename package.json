@@ -1,7 +1,7 @@
 {
   "name": "trabalho---node",
   "version": "1.0.0",
-  "description": "",
+  "description": "Código de criação do Banco no Workbench: \r create user 'usrNode'@'%' identified with \r mysql_native_password by '@root';\r grant all on trabalhonode.* to 'usrNode'@'%';",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -43,6 +43,7 @@ app.get("/atletas/:id", async function (req, res) {
   const resultado = await atleta.atleta.findByPk(req.params.id, {
     include: { model: meta.meta },
   });
+  //verifica se o resultado da busca é null
   if (resultado == null) {
     res.status(404).send({});
   } else {
