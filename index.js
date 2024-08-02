@@ -27,7 +27,8 @@ banco.conexao.sync(function () {
 //1. Ler todos os registros da entidade A e B (1 ponto).
 //ATLETAS
 app.get("/atletas/", async function (req, res) {
-  const resultado = await atleta.atleta.findAll();
+  const resultado = await atleta.atleta.findAll({include: { model: meta.meta },
+});
   res.send(resultado);
 });
 
@@ -67,6 +68,7 @@ app.get("/metas/:id", async function (req, res) {
 //ATLETAS
 app.get("/atletas/nome/:nome", async function (req, res) {
   const resultado = await atleta.atleta.findAll({
+    //Filtra os registros pelo campo nome que corresponde ao valor do parâmetro de rota :nome.
     where: { nome: req.params.nome },
     include: { model: meta.meta },
   });
@@ -92,7 +94,9 @@ app.get("/metas/titulo/:titulo", async function (req, res) {
 //4. Criar um registro da entidade A e B (2 pontos).
 //ATLETAS
 app.post("/atletas/", async function (req, res) {
+  //create é um método do Sequelize que cria um novo registro no banco de dados.
   const resultado = await atleta.atleta.create({
+    //O objeto passado para create contém os dados do novo atleta que serão passados no corpo da requisição
     nome: req.body.nome,
     idade: req.body.idade,
   });
@@ -110,7 +114,10 @@ app.post("/metas/", async function (req, res) {
 
 //5. Atualizar um registro da entidade A e B (2 pontos).
 //ATLETAS
+//Define o caminho da URL para a rota
+//onde :id é um parâmetro de rota que representa o identificador do atleta a ser atualizado.
 app.put("/atletas/:id", async function (req, res) {
+  //O método update recebe dois parâmetros
   const resultado = await atleta.atleta.update(
     {
       //primeiro parametro = atributos
@@ -158,7 +165,7 @@ app.delete("/atletas/:id", async function (req, res) {
   const resultado = await atleta.atleta.destroy({
     where: { id: req.params.id },
   });
-  if (resultado == null) {
+  if (resultado == 0) {
     res.status(404).send({});
   } else {
     res.status(204).send({});
@@ -170,7 +177,7 @@ app.delete("/metas/:id", async function (req, res) {
   const resultado = await meta.meta.destroy({
     where: { id: req.params.id },
   });
-  if (resultado == null) {
+  if (resultado == 0) {
     res.status(404).send({});
   } else {
     res.status(204).send({});
